@@ -3,16 +3,30 @@ Food Hygiene MCP Server
 
 Exposes UK Food Hygiene Rating Scheme (FHRS) data via MCP tools.
 Data covers England, Wales, and Northern Ireland.
+
+Structure:
+    1. Configuration (API base, headers)
+    2. Business type mappings
+    3. API client helper
+    4. MCP tools (search_establishments, get_establishment_details)
+    5. Entry point
 """
 
 import httpx
 from mcp.server.fastmcp import FastMCP
 
-# FSA API configuration
+# =============================================================================
+# Configuration
+# =============================================================================
+
 API_BASE = "https://api.ratings.food.gov.uk"
 API_HEADERS = {"x-api-version": "2"}
 
-# Business type name -> ID mapping (common types)
+# =============================================================================
+# Business Type Mappings
+# =============================================================================
+
+# Maps common names to FSA business type IDs
 BUSINESS_TYPES = {
     "restaurant": 1,
     "cafe": 1,
@@ -39,6 +53,10 @@ BUSINESS_TYPES = {
 
 mcp = FastMCP("Food Hygiene UK")
 
+# =============================================================================
+# API Client
+# =============================================================================
+
 
 async def fetch_fsa(endpoint: str, params: dict | None = None) -> dict:
     """Make an async request to the FSA API."""
@@ -51,6 +69,11 @@ async def fetch_fsa(endpoint: str, params: dict | None = None) -> dict:
         )
         resp.raise_for_status()
         return resp.json()
+
+
+# =============================================================================
+# MCP Tools
+# =============================================================================
 
 
 @mcp.tool()
@@ -219,6 +242,11 @@ async def get_establishment_details(fhrs_id: int) -> dict:
         } if data.get("geocode") else None,
         "right_to_reply": data.get("RightToReply") or None,
     }
+
+
+# =============================================================================
+# Entry Point
+# =============================================================================
 
 
 def main():
