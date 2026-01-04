@@ -1,6 +1,6 @@
 [project]
 name = "food-hygiene-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for querying UK food hygiene ratings via the FSA API"
 readme = "README.md"
 requires-python = ">=3.14"

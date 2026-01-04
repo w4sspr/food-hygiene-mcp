@@ -58,17 +58,34 @@ mcp = FastMCP("Food Hygiene UK")
 # =============================================================================
 
 
+class FSAError(Exception):
+    """Error from FSA API."""
+    pass
+
+
 async def fetch_fsa(endpoint: str, params: dict | None = None) -> dict:
     """Make an async request to the FSA API."""
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(
-            f"{API_BASE}{endpoint}",
-            headers=API_HEADERS,
-            params=params,
-            timeout=30.0,
-        )
-        resp.raise_for_status()
-        return resp.json()
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(
+                f"{API_BASE}{endpoint}",
+                headers=API_HEADERS,
+                params=params,
+                timeout=30.0,
+            )
+            resp.raise_for_status()
+            return resp.json()
+    except httpx.TimeoutException:
+        raise FSAError("FSA API request timed out. Please try again.")
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 404:
+            raise FSAError(f"Establishment not found.")
+        elif e.response.status_code >= 500:
+            raise FSAError(f"FSA API is temporarily unavailable (HTTP {e.response.status_code}). Please try again later.")
+        else:
+            raise FSAError(f"FSA API error: HTTP {e.response.status_code}")
+    except httpx.RequestError as e:
+        raise FSAError(f"Could not connect to FSA API: {e}")
 
 
 # =============================================================================
@@ -116,10 +133,13 @@ async def search_establishments(
 
     if name:
         params["name"] = name
-    if address:
+    # Combine address and postcode if both provided (API uses single address field)
+    if address and postcode:
+        params["address"] = f"{address} {postcode}"
+    elif postcode:
+        params["address"] = postcode
+    elif address:
         params["address"] = address
-    if postcode:
-        params["address"] = postcode  # API uses address field for postcode too
 
     # Geo-search
     if latitude is not None and longitude is not None:
@@ -157,7 +177,10 @@ async def search_establishments(
         params["ratingKey"] = rating_key
         params["ratingOperatorKey"] = rating_operator
 
-    data = await fetch_fsa("/Establishments", params)
+    try:
+        data = await fetch_fsa("/Establishments", params)
+    except FSAError as e:
+        return {"error": str(e), "establishments": []}
 
     establishments = data.get("establishments", [])
 
@@ -205,7 +228,10 @@ async def get_establishment_details(fhrs_id: int) -> dict:
     Returns:
         Full details including rating breakdown, inspection date, and local authority
     """
-    data = await fetch_fsa(f"/Establishments/{fhrs_id}")
+    try:
+        data = await fetch_fsa(f"/Establishments/{fhrs_id}")
+    except FSAError as e:
+        return {"error": str(e)}
 
     # Extract scores if available
     scores = {}
