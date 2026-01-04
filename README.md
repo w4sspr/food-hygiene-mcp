@@ -2,6 +2,7 @@
 
 Query UK food hygiene ratings from Claude.
 
+[![PyPI](https://img.shields.io/pypi/v/food-hygiene-mcp.svg)](https://pypi.org/project/food-hygiene-mcp/)
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Server-green.svg)](https://modelcontextprotocol.io)
@@ -16,13 +17,30 @@ TODO: Record a ~10 second GIF showing Claude Desktop answering "What's the hygie
 
 ## Quick Start
 
+Add to your Claude Desktop config:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+### Option 1: Via PyPI (recommended)
+
+```json
+{
+  "mcpServers": {
+    "food-hygiene": {
+      "command": "uvx",
+      "args": ["food-hygiene-mcp"]
+    }
+  }
+}
+```
+
+### Option 2: From source
+
 ```bash
-# Clone and install
 git clone https://github.com/w4sspr/food-hygiene-mcp.git
 cd food-hygiene-mcp
 uv sync
-
-# Add to Claude Desktop config (~/.config/claude/claude_desktop_config.json)
 ```
 
 ```json
@@ -35,6 +53,8 @@ uv sync
   }
 }
 ```
+
+> **Troubleshooting:** If you get `spawn uvx ENOENT` or `spawn uv ENOENT`, Claude Desktop can't find the executable. Use the full path instead (run `which uvx` or `which uv` to find it, e.g., `/Users/you/.local/bin/uvx`).
 
 Restart Claude Desktop, then try:
 
