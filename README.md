@@ -1,6 +1,6 @@
 # Food Hygiene MCP Server
 
-Query UK food hygiene ratings from Claude.
+Query UK food hygiene ratings via MCP.
 
 [![PyPI](https://img.shields.io/pypi/v/food-hygiene-mcp.svg)](https://pypi.org/project/food-hygiene-mcp/)
 [![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
@@ -13,7 +13,7 @@ Query UK food hygiene ratings from Claude.
 
 ## Quick Start
 
-Add to your Claude Desktop config:
+Works with any MCP-compatible client (Claude Desktop, VS Code, Cursor, etc.). Example for Claude Desktop:
 
 - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
