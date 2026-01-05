@@ -7,13 +7,9 @@ Query UK food hygiene ratings from Claude.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Server-green.svg)](https://modelcontextprotocol.io)
 
-<!--
 ## Demo
 
 ![Demo GIF](demo.gif)
-
-TODO: Record a ~10 second GIF showing Claude Desktop answering "What's the hygiene rating for Dishoom in London?"
--->
 
 ## Quick Start
 
