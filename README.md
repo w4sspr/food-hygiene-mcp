@@ -101,13 +101,9 @@ Returns: rating breakdown (hygiene, structural, confidence in management), inspe
 - [ ] Scotland support via FHIS API
 - [ ] Cache business type mappings
 
-## Why I Built This
-
-Built to demonstrate MCP integration with UK public sector data for my FDE application.
-
 ## See Also
 
-- [uk-charities-mcp](https://github.com/w4sspr/uk-charities-mcp) — Query the Charity Commission register
+> **Why I built this:** MCP integration with UK public sector data APIs. See also: [uk-charities-mcp](https://github.com/w4sspr/uk-charities-mcp) for Charity Commission data.
 
 ## Data Source
 
